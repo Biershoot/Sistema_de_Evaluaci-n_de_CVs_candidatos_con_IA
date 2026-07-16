@@ -1,0 +1,9 @@
+# Dependencias de desarrollo y CI.
+-r requirements.txt
+
+pytest>=8.0
+pytest-cov>=5.0
+httpx>=0.28          # cliente de test de FastAPI
+ruff>=0.9            # lint + formato
+mypy>=1.14
+reportlab>=4.0       # genera PDFs de prueba en los tests

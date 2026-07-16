@@ -1,0 +1,36 @@
+# Entornos y secretos
+.env
+.env.*
+!.env.example
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Herramientas
+.streamlit/secrets.toml
+.claude/settings.local.json
+.idea/
+.vscode/
+*.iml
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Datos sensibles: nunca versionar CVs reales
+data/
+*.pdf
+!tests/fixtures/*.pdf

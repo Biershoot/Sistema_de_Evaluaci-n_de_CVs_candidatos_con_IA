@@ -1,0 +1,21 @@
+# Dependencias de ejecución.
+# Versiones fijadas al rango menor probado en CI.
+
+# Orquestación del LLM y salida estructurada
+langchain-core>=1.2,<2.0
+langchain-openai>=1.3,<2.0
+
+# API
+fastapi>=0.133,<1.0
+uvicorn[standard]>=0.34,<1.0
+python-multipart>=0.0.20
+
+# Modelos y configuración
+pydantic>=2.12,<3.0
+pydantic-settings>=2.13,<3.0
+
+# Extracción de PDF (pypdf; PyPDF2 está sin mantenimiento desde 2023)
+pypdf>=6.0,<7.0
+
+# Interfaz
+streamlit>=1.54,<2.0

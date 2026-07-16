@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint, tipos y tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Formato (ruff)
+        run: ruff format --check .
+
+      - name: Tipos (mypy)
+        run: mypy app
+
+      - name: Tests
+        # La suite no llama a ningún proveedor: la cadena del LLM está
+        # sustituida por dobles, así que no hace falta clave de API.
+        run: pytest --cov=app --cov-report=term-missing --cov-report=xml
+
+      - name: Subir cobertura
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.xml
+
+  docker:
+    name: Build de la imagen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Construir imagen
+        run: docker build -t cv-analyzer:${{ github.sha }} .
+
+      - name: Verificar que la API arranca
+        run: |
+          docker run -d --name cv-api -p 8000:8000 -e OPENAI_API_KEY=sk-ci-dummy \
+            cv-analyzer:${{ github.sha }}
+          for i in $(seq 1 30); do
+            if curl -fs http://localhost:8000/api/v1/health; then
+              echo "API arriba"; exit 0
+            fi
+            sleep 2
+          done
+          echo "La API no respondió a tiempo"; docker logs cv-api; exit 1

@@ -1,0 +1,37 @@
+[project]
+name = "cv-analyzer"
+version = "1.0.0"
+description = "Sistema de evaluación de CVs con IA: API FastAPI + interfaz Streamlit sobre LangChain."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-v --strict-markers"
+
+[tool.ruff]
+line-length = 90
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # bugbear
+    "SIM", # simplify
+]
+
+[tool.ruff.lint.per-file-ignores]
+# B008 desaconseja llamadas en valores por defecto, pero Depends()/File()/Form()
+# en la firma es precisamente cómo FastAPI declara la inyección de dependencias.
+"app/api/routes.py" = ["B008"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true

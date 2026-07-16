@@ -1,0 +1,35 @@
+# Levanta la API y la interfaz Streamlit a partir de la misma imagen.
+# Uso: cp .env.example .env && docker compose up --build
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file: .env
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  ui:
+    build: .
+    command:
+      - streamlit
+      - run
+      - streamlit_app.py
+      - --server.port=8501
+      - --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    env_file: .env
+    restart: unless-stopped
+    depends_on:
+      - api
