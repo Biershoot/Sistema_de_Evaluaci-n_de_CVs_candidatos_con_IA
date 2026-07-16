@@ -283,6 +283,4 @@ streamlit run streamlit_app.py      # UI en :8501
 
 Python 3.11+ · FastAPI · LangChain · OpenAI · Pydantic v2 · Streamlit · pypdf · pytest · Docker · GitHub Actions · ruff · mypy
 
-## License
 
-MIT — see [LICENSE](LICENSE).
