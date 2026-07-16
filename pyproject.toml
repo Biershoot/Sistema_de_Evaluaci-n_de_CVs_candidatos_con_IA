@@ -4,7 +4,6 @@ version = "1.0.0"
 description = "Sistema de evaluación de CVs con IA: API FastAPI + interfaz Streamlit sobre LangChain."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "MIT" }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

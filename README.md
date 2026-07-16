@@ -5,7 +5,6 @@
 [![Tests](https://img.shields.io/badge/tests-60%20passing-brightgreen.svg)](#testing)
 [![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](#testing)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Turns an unstructured PDF résumé into a **typed, validated fit assessment** against a job description — via a REST API or a Streamlit UI.
 
@@ -42,30 +41,16 @@ The fit score is weighted: relevant experience 40%, technical skills 35%, educat
 
 The LLM is an implementation detail of one service, not a shape the whole codebase bends around. Both entry points call the same domain layer.
 
-```mermaid
-flowchart LR
-    subgraph clients [Entry points]
-        UI[Streamlit UI]
-        API[FastAPI<br/>POST /api/v1/evaluations]
-    end
+```text
+Entry points         Domain (no framework imports)         External
+------------         -----------------------------         --------
 
-    subgraph domain [Domain - provider agnostic]
-        PDF[pdf_processor<br/>bytes to text]
-        EVAL[cv_evaluator<br/>text to AnalisisCV]
-        MODEL[AnalisisCV<br/>Pydantic schema]
-    end
-
-    subgraph ext [External]
-        LLM[OpenAI<br/>gpt-4o-mini]
-    end
-
-    UI --> PDF
-    API --> PDF
-    PDF --> EVAL
-    EVAL -->|with_structured_output| LLM
-    LLM -->|validated| MODEL
-    MODEL --> UI
-    MODEL --> API
+Streamlit UI --+
+               +--> pdf_processor --> cv_evaluator --> OpenAI gpt-4o-mini
+FastAPI -------+     bytes -> text     prompt +                     |
+                                       structured output            |
+                                                                    |
+             AnalisisCV (Pydantic schema, validated) <--------------+
 ```
 
 **Why this shape:** `pdf_processor` takes `bytes`, not a Streamlit upload or a FastAPI `UploadFile`. Each entry point adapts its own upload type at the boundary, so the domain layer has no framework imports and is testable with plain bytes.
