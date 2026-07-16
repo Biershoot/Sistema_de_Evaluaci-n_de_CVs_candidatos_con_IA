@@ -1,6 +1,6 @@
 # AI-Powered CV Evaluation System
 
-[![CI](https://github.com/Biershoot/Sistema_de_Evaluaci-n_de_CVs_candidatos_con_IA/actions/workflows/ci.yml/badge.svg)](https://github.com/Biershoot/Sistema_de_Evaluaci-n_de_CVs_candidatos_con_IA/actions/workflows/ci.yml)
+[![CI](https://github.com/Biershoot/CV_evaluation_system_portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Biershoot/CV_evaluation_system_portfolio/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-60%20passing-brightgreen.svg)](#testing)
 [![Coverage](https://img.shields.io/badge/coverage-98%25-brightgreen.svg)](#testing)
@@ -44,25 +44,25 @@ The LLM is an implementation detail of one service, not a shape the whole codeba
 
 ```mermaid
 flowchart LR
-    subgraph clients ["Entry points"]
-        UI["Streamlit UI"]
-        API["FastAPI<br/>POST /api/v1/evaluations"]
+    subgraph clients [Entry points]
+        UI[Streamlit UI]
+        API[FastAPI<br/>POST /api/v1/evaluations]
     end
 
-    subgraph domain ["Domain (provider-agnostic)"]
-        PDF["pdf_processor<br/>bytes → text"]
-        EVAL["cv_evaluator<br/>text → AnalisisCV"]
-        MODEL["AnalisisCV<br/>Pydantic schema"]
+    subgraph domain [Domain - provider agnostic]
+        PDF[pdf_processor<br/>bytes to text]
+        EVAL[cv_evaluator<br/>text to AnalisisCV]
+        MODEL[AnalisisCV<br/>Pydantic schema]
     end
 
-    subgraph ext ["External"]
-        LLM["OpenAI<br/>gpt-4o-mini"]
+    subgraph ext [External]
+        LLM[OpenAI<br/>gpt-4o-mini]
     end
 
     UI --> PDF
     API --> PDF
     PDF --> EVAL
-    EVAL -->|"prompt | with_structured_output"| LLM
+    EVAL -->|with_structured_output| LLM
     LLM -->|validated| MODEL
     MODEL --> UI
     MODEL --> API
@@ -115,8 +115,8 @@ The LangChain chain is replaced by a double, so the suite runs in **~1 second, o
 **Requirements:** Python 3.11+ and an [OpenAI API key](https://platform.openai.com/api-keys).
 
 ```bash
-git clone https://github.com/Biershoot/Sistema_de_Evaluaci-n_de_CVs_candidatos_con_IA.git
-cd Sistema_de_Evaluaci-n_de_CVs_candidatos_con_IA
+git clone https://github.com/Biershoot/CV_evaluation_system_portfolio.git
+cd CV_evaluation_system_portfolio
 
 python -m venv .venv
 source .venv/bin/activate        # Windows: .venv\Scripts\activate
