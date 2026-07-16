@@ -31,7 +31,9 @@ select = [
 "app/api/routes.py" = ["B008"]
 
 [tool.mypy]
-python_version = "3.11"
+# Sin `python_version` fijo: mypy usa la versión del intérprete que lo ejecuta.
+# Fijarlo a 3.11 hacía que, en los runners de 3.12/3.13, mypy analizara los
+# stubs de numpy con reglas de 3.11 y fallara ante sus sentencias `type`.
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
